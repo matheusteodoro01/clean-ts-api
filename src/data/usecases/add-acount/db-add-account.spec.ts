@@ -92,4 +92,21 @@ describe('DdAddAccount Usecase', () => {
 
     await expect(promise).rejects.toThrow()
   })
+
+  test('Should return an account if on sucess', async () => {
+    const { sut } = makeSut()
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_name',
+      password: 'hashed_password'
+    }
+    const account = await sut.add(accountData)
+
+    await expect(account).toEqual({
+      id: 'valid_id',
+      name: 'valid_name',
+      email: 'valid_name',
+      password: 'hashed_password'
+    })
+  })
 })
