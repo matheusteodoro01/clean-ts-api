@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1649616467131" clover="3.2.0">
-  <project timestamp="1649616467131" name="All files">
+<coverage generated="1649616871168" clover="3.2.0">
+  <project timestamp="1649616871168" name="All files">
     <metrics statements="141" coveredstatements="8" conditionals="14" coveredconditionals="1" methods="14" coveredmethods="1" elements="169" coveredelements="10" complexity="0" loc="141" ncloc="141" packages="7" files="14" classes="14"/>
     <package name="domain.models">
       <metrics statements="6" coveredstatements="0" conditionals="1" coveredconditionals="0" methods="1" coveredmethods="0"/>
@@ -194,7 +194,7 @@
     </package>
     <package name="ultils">
       <metrics statements="8" coveredstatements="8" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
-      <file name="email-validator.ts" path="/home/matheus/Área de Trabalho/Pessoais/clean-tsa-api/src/ultils/email-validator.ts">
+      <file name="email-validator-adpter.ts" path="/home/matheus/Área de Trabalho/Pessoais/clean-tsa-api/src/ultils/email-validator-adpter.ts">
         <metrics statements="8" coveredstatements="8" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
