@@ -5,9 +5,7 @@ import { EmailValidatorAdapter } from '../../ultils/email-validator-adpter'
 import { AccountMongoRepository } from '../../infra/db/mongodb/account-repository/account'
 import { LogControllerDecorator } from '../decorators/log'
 
-import { LogErrorRepository } from '../../data/protocols/log-error-repository'
-
-class LogErrorRepositoryIMp implements LogErrorRepository {logError: (stack: string) => Promise<void> }
+import { LogMongoRepository } from '../../infra/db/mongodb/log-repository/log'
 
 export const makeSignUpController = (): LogControllerDecorator => {
   const salt = 12
@@ -16,6 +14,6 @@ export const makeSignUpController = (): LogControllerDecorator => {
   const accountMongoRepository = new AccountMongoRepository()
   const dbAddAccount = new DbAddAccount(bcryptAdapter, accountMongoRepository)
   const signUpController = new SignUpController(emailValidatorAdapter, dbAddAccount)
-  const logErrorRepository = new LogErrorRepositoryIMp()
-  return new LogControllerDecorator(signUpController, logErrorRepository)
+  const logMongoRepository = new LogMongoRepository()
+  return new LogControllerDecorator(signUpController, logMongoRepository)
 }
