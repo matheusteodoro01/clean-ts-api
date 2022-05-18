@@ -7,7 +7,7 @@ import { LogControllerDecorator } from '../decorators/log'
 
 import { LogErrorRepository } from '../../data/protocols/log-error-repository'
 
-class LogErrorRepositoryIMp implements LogErrorRepository {log: (stack: string) => Promise<void> }
+class LogErrorRepositoryIMp implements LogErrorRepository {logError: (stack: string) => Promise<void> }
 
 export const makeSignUpController = (): LogControllerDecorator => {
   const salt = 12
