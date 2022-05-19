@@ -1,3 +1,3 @@
 export interface Authentication {
-  auth: (email: string, password: string) => Promise<String>
+  auth: (email: string, password: string) => Promise<string | null>
 }
