@@ -1,3 +1,4 @@
+import { Authentication } from '../../../domain/usecases/authentication'
 import { InvalidParamError, MissingParamError } from '../../errors'
 import { badRequest, serverError } from '../../helpers/http-helper'
 import { EmailValidator, HttpRequest } from '../signup/signup-protocols'
@@ -12,17 +13,28 @@ const makeEmailValidator = (): EmailValidator => {
   return new EmailValidatorStub()
 }
 
+const makeAuthenticationStub = (): Authentication => {
+  class AuthenticationStub implements Authentication {
+    async auth (email: string, password: string): Promise<string> {
+      return await Promise.resolve('valid_token')
+    }
+  }
+  return new AuthenticationStub()
+}
+
 interface SutTypes {
   sut: LoginController
   emailValidatorStub: EmailValidator
+  authenticationStub: Authentication
 
 }
 
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator()
-  const sut = new LoginController(emailValidatorStub)
+  const authenticationStub = makeAuthenticationStub()
+  const sut = new LoginController(emailValidatorStub, authenticationStub)
 
-  return { sut, emailValidatorStub }
+  return { sut, emailValidatorStub, authenticationStub }
 }
 
 const makeFakeHttpRequest = (): HttpRequest => ({
@@ -47,7 +59,7 @@ describe('Login Controller', () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
-        email: 'anY_email@mail.com'
+        email: 'any_email@mail.com'
       }
     }
     const httpResponse = await sut.handle(httpRequest)
@@ -75,5 +87,12 @@ describe('Login Controller', () => {
     isValidSpy.mockImplementationOnce(() => { throw new Error() })
     const httpResponse = await sut.handle(makeFakeHttpRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should call Authentication with correct values', async () => {
+    const { sut, authenticationStub } = makeSut()
+    const isValidSpy = jest.spyOn(authenticationStub, 'auth')
+    await sut.handle(makeFakeHttpRequest())
+    expect(isValidSpy).toHaveBeenCalledWith('any_email@mail.com', 'any_password')
   })
 })
