@@ -1,5 +1,5 @@
 import { InvalidParamError, MissingParamError } from '../../errors'
-import { badRequest, serverError, unthorized } from '../../helpers/http-helper'
+import { badRequest, ok, serverError, unthorized } from '../../helpers/http-helper'
 import { EmailValidator, HttpRequest, Authentication } from '../login/login-protocols'
 import { LoginController } from './login'
 
@@ -108,5 +108,11 @@ describe('Login Controller', () => {
     isAuth.mockReturnValueOnce(Promise.resolve(null))
     const httpResponse = await sut.handle(makeFakeHttpRequest())
     expect(httpResponse).toEqual(unthorized())
+  })
+
+  test('Should retun 200 is valid credentials provided', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(makeFakeHttpRequest())
+    expect(httpResponse).toEqual(ok({ acessToken: 'valid_token' }))
   })
 })
