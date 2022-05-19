@@ -30,7 +30,7 @@ export class LoginController implements Controller {
         return unthorized()
       }
 
-      return ok(await this.authentication.auth(email, password))
+      return ok(token)
     } catch (error) {
       return serverError(new Error())
     }
