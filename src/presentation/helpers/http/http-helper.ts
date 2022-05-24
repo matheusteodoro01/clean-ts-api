@@ -1,5 +1,5 @@
-import { ServerError, UnautrorizedError } from '../errors'
-import { HttpResponse } from '../protocols/http'
+import { ServerError, UnautrorizedError } from '../../errors'
+import { HttpResponse } from '../../protocols/http'
 
 export const unthorized = (): HttpResponse => ({
 
