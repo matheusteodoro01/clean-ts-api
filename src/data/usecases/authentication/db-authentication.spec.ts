@@ -40,7 +40,7 @@ const makeEncrypter = (): Encrypter => {
 }
 const makeHashCompare = (): HashComparer => {
   class HashCompareStub implements HashComparer {
-    compare (password: string, hasedPassword: string): Boolean {
+    async compare (password: string, hasedPassword: string): Promise<Boolean> {
       return true
     }
   }
