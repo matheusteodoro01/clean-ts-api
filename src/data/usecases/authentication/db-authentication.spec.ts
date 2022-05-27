@@ -1,11 +1,11 @@
 import { AccountModel } from '../../../domain/models/account'
 import { DbAuthetication } from './db-authentication'
-import { AuthenticationModel, LoadAccountByEmailRepository, HashCompare, Encrypter, UpdateAccessTokenRepository } from './db-authentication-protocols'
+import { AuthenticationModel, LoadAccountByEmailRepository, HashComparer, Encrypter, UpdateAccessTokenRepository } from './db-authentication-protocols'
 
 interface SutTypes {
   sut: DbAuthetication
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
-  hashComparerStub: HashCompare
+  hashComparerStub: HashComparer
   encrypterStub: Encrypter
   updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
 }
@@ -38,8 +38,8 @@ const makeEncrypter = (): Encrypter => {
   }
   return new EncrypterStub()
 }
-const makeHashCompare = (): HashCompare => {
-  class HashCompareStub implements HashCompare {
+const makeHashCompare = (): HashComparer => {
+  class HashCompareStub implements HashComparer {
     compare (password: string, hasedPassword: string): Boolean {
       return true
     }

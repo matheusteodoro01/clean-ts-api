@@ -1,4 +1,4 @@
 
-export interface HashCompare {
+export interface HashComparer {
   compare: (password: string, hashPassword) => Boolean
 }
