@@ -35,7 +35,7 @@ describe('Login Routes', () => {
   })
 
   describe('POST /login', () => {
-    test('Shold return 200 on sigup', async () => {
+    test('Shold return 200 on login', async () => {
       const password = await hash('1234', 12)
       await accountCollection.insertOne({
         name: 'Matheus',
@@ -49,6 +49,21 @@ describe('Login Routes', () => {
           password: '1234'
         }))
         .expect(200)
+    })
+    test('Shold return 401 on login', async () => {
+      const password = await hash('1234', 12)
+      await accountCollection.insertOne({
+        name: 'Matheus',
+        email: 'matheusteodoro01@hotmail.com',
+        password
+      })
+      await request(app)
+        .post('/api/login')
+        .send(({
+          email: 'matheusteodoro01@hotmail.com',
+          password: '12345'
+        }))
+        .expect(401)
     })
   })
 })
