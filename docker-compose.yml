@@ -15,7 +15,7 @@ services:
     command: npm start
     restart: always
     volumes:
-      - ./dist:/usr/app
+      - ./dist:/usr/app/dist
     ports:
       - '5050:5050'
     links:
