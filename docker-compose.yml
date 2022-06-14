@@ -10,9 +10,9 @@ services:
       - '27017:27017'
   api:
     container_name: api-container
-    build: .
-    image: clean-node-api
-    command: npm start
+    image: node:16
+    working_dir: /usr/app
+    command: bash -c "npm install --only=prod && npm run debug"
     restart: always
     volumes:
       - ./dist:/usr/app/dist
