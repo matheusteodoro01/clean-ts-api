@@ -121,4 +121,11 @@ describe('Signup Controller', () => {
 
     expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
   })
+  test('Should retun 500 if Authetication throws ', async () => {
+    const { sut, authenticationStub } = makeSut()
+    const isValidSpy = jest.spyOn(authenticationStub, 'auth')
+    isValidSpy.mockImplementationOnce(() => { throw new Error() })
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
+  })
 })
