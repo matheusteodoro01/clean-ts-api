@@ -16,8 +16,10 @@ services:
     restart: always
     volumes:
       - ./dist:/usr/app/dist
+      - ./package.json:/usr/app/package.json
     ports:
       - '5050:5050'
+      - '9222:9222'
     links:
       - mongo
       
