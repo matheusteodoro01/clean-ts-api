@@ -7,8 +7,8 @@ import { LogControllerDecorator } from '../../decorators/log-controller.decorato
 
 import { LogMongoRepository } from '../../../infra/db/mongodb/log/log-mongo-repository'
 import { makeSignUpValidation } from './signup-validation-factory'
-import { DbAuthetication } from '@/data/usecases/authentication/db-authentication'
-import { JwtAdapter } from '@/infra/criptography/bcrypt-adapter/jwt-adapter/jwt-adapter'
+import { DbAuthetication } from '../../../data/usecases/authentication/db-authentication'
+import { JwtAdapter } from '../../../infra/criptography/bcrypt-adapter/jwt-adapter/jwt-adapter'
 
 export const makeSignUpController = (): LogControllerDecorator => {
   const salt = 12
