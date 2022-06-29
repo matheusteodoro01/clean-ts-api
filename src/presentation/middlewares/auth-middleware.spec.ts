@@ -9,6 +9,9 @@ import { AuthMiddleware } from './auth-middleware'
 const makeFakeAccount = (): AccountModel => ({
   id: 'any_id', email: 'any-email', name: 'any-name', password: 'any-password'
 })
+const makeFakeRequest = (): HttpRequest => ({
+  headers: { 'x-access-token': 'any-token' }
+})
 interface SutTypes {
   sut: Middleware
   loadAccountByTokenStub: LoadAccountByToken
@@ -41,9 +44,8 @@ describe('Auth Middleware', () => {
 
   test('Should call LoadAccountByToken with correct accessToken', async () => {
     const { sut, loadAccountByTokenStub } = makeSut()
-    const httpRequest: HttpRequest = { headers: { 'x-access-token': 'any-token' } }
     const loadAccountByTokenSpy = jest.spyOn(loadAccountByTokenStub, 'load')
-    await sut.handle(httpRequest)
+    await sut.handle(makeFakeRequest())
     expect(loadAccountByTokenSpy).toHaveBeenCalledWith('any-token')
   })
 })
