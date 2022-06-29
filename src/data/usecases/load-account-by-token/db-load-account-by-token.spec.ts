@@ -9,10 +9,13 @@ interface SutTypes {
   sut: DbLoadAccountByToken
 }
 
+const makeFakeAccount = (): AccountModel => ({
+  id: 'any_id', email: 'any-email', name: 'any-name', password: 'any-password'
+})
 const makeLoadAccountByTokenRepositoryStub = (): LoadAccountByTokenRepository => {
   class LoadAccountByTokenRepositoryStub implements LoadAccountByTokenRepository {
     async loadAccountByToken (accessToken: string, role?: string): Promise<AccountModel> {
-      return await Promise.resolve({ id: 'any_id', email: 'any_email', name: 'any_name', password: 'any_password' })
+      return await Promise.resolve(makeFakeAccount())
     }
   }
   return new LoadAccountByTokenRepositoryStub()
@@ -53,5 +56,11 @@ describe('DbLoadAccountByToken UseCase', () => {
     jest.spyOn(decrypterStub, 'decrypt').mockReturnValueOnce(Promise.resolve(null))
     const account = await sut.load('any_token')
     expect(account).toBeNull()
+  })
+
+  test('Should return an account on success', async () => {
+    const { sut } = makeSut()
+    const account = await sut.load('any_token')
+    expect(account).toEqual(makeFakeAccount())
   })
 })
