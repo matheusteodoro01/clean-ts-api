@@ -19,7 +19,7 @@ describe('Survey Routes', () => {
   })
 
   describe('POST /surveys', () => {
-    test('Shold return 204 on add survey sucess', async () => {
+    test('Shold return 403 on add survey without access token', async () => {
       await request(app)
         .post('/api/surveys')
         .send(({
@@ -34,7 +34,7 @@ describe('Survey Routes', () => {
             }
           ]
         }))
-        .expect(204)
+        .expect(403)
     })
   })
 })
