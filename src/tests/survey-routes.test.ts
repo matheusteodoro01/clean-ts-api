@@ -43,7 +43,7 @@ describe('Survey Routes', () => {
         }))
         .expect(403)
     })
-    test('Shold return 200 on login', async () => {
+    test('Shold return 204 if valid access token is provided', async () => {
       const password = await hash('1234', 12)
       const res = await accountCollection.insertOne({
         name: 'Matheus',
