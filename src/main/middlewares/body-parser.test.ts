@@ -1,5 +1,5 @@
 import request from 'supertest'
-import app from '../config/app'
+import app from '@/main/config/app'
 
 describe('Body Parser Middleware', () => {
   test('Shold parser body as json', async () => {

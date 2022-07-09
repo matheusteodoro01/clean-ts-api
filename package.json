@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "start": "node dist/main/server.js",
-        "build": "rimraf dist && tsc",
+        "build": "rimraf dist && tsc --project tsconfig-build.json && tscpaths -p tsconfig-build.json -s ./src -o ./dist",
         "debug": "nodemon -L --wath ./dist --inspec=0.0.0.0:9222 --nolazy ./dist/main/server.js",
         "up": "npm run build && docker-compose up -d",
         "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
@@ -45,6 +45,7 @@
         "supertest": "^6.2.2",
         "ts-jest": "^27.1.4",
         "ts-node": "^10.7.0",
+        "tsconfig-paths": "^4.0.0",
         "typescript": "^4.6.3"
     },
     "dependencies": {
