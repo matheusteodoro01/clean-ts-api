@@ -1,8 +1,8 @@
-import env from '../../../../config/env'
-import { DbAuthetication } from '../../../../../data/usecases/authentication/db-authentication'
-import { AccountMongoRepository } from '../../../../../infra/db/mongodb/account/account-mongo-repository'
-import { JwtAdapter } from '../../../../../infra/criptography/bcrypt-adapter/jwt-adapter/jwt-adapter'
-import { BcryptAdapter } from '../../../../../infra/criptography/bcrypt-adapter/bcrypt-adapter'
+import env from '@/main/config/env'
+import { DbAuthetication } from '@/data/usecases/authentication/db-authentication'
+import { AccountMongoRepository } from '@/infra/db/mongodb/account/account-mongo-repository'
+import { JwtAdapter } from '@/infra/criptography/bcrypt-adapter/jwt-adapter/jwt-adapter'
+import { BcryptAdapter } from '@/infra/criptography/bcrypt-adapter/bcrypt-adapter'
 
 export const makeDbAuthetication = (): DbAuthetication => {
   const salt = 12
