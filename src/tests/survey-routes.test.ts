@@ -8,6 +8,23 @@ import { hash } from 'bcrypt'
 
 let surveyCollection: Collection
 let accountCollection: Collection
+
+const makeAccessToken = async (): Promise<string> => {
+  const password = await hash('1234', 12)
+  const res = await accountCollection.insertOne({
+    name: 'Matheus',
+    email: 'matheusteodoro01@hotmail.com',
+    password,
+    role: 'admin'
+  })
+  const id = res.insertedId
+  const accessToken = sign({ id }, env.jtwSecret)
+  await accountCollection.updateOne({ _id: id }, {
+    $set: { accessToken }
+  })
+  return accessToken
+}
+
 describe('Survey Routes', () => {
   beforeAll(async () => {
     await MongoHelper.connect(global.__MONGO_URI__)
@@ -21,7 +38,6 @@ describe('Survey Routes', () => {
     surveyCollection = await MongoHelper.getCollection('surveys')
     accountCollection = await MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
-
     await surveyCollection.deleteMany({})
   })
 
@@ -44,18 +60,7 @@ describe('Survey Routes', () => {
         .expect(403)
     })
     test('Shold return 204 if valid access token is provided', async () => {
-      const password = await hash('1234', 12)
-      const res = await accountCollection.insertOne({
-        name: 'Matheus',
-        email: 'matheusteodoro01@hotmail.com',
-        password,
-        role: 'admin'
-      })
-      const id = res.insertedId
-      const accessToken = sign({ id }, env.jtwSecret)
-      await accountCollection.updateOne({ _id: id }, {
-        $set: { accessToken }
-      })
+      const accessToken = await makeAccessToken()
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
@@ -72,6 +77,45 @@ describe('Survey Routes', () => {
           ]
         }))
         .expect(204)
+    })
+  })
+
+  describe('GET /surveys', () => {
+    test('Shold return 403 on load surveys without access token', async () => {
+      await request(app)
+        .get('/api/surveys')
+        .expect(403)
+    })
+
+    test('Shold return 204 on load surveys empty', async () => {
+      const accessToken = await makeAccessToken()
+      await request(app)
+        .get('/api/surveys')
+        .set('x-access-token', accessToken)
+        .expect(204)
+    })
+
+    test('Shold return 200 on load surveys if valid access token is provided', async () => {
+      const accessToken = await makeAccessToken()
+      await surveyCollection.insertOne(
+        {
+          question: 'any_question',
+          answers: [
+            {
+              answer: 'any_answer',
+              image: 'any_image'
+            },
+            {
+              answer: 'other_answer'
+            }
+          ],
+          date: new Date()
+        }
+      )
+      await request(app)
+        .get('/api/surveys')
+        .set('x-access-token', accessToken)
+        .expect(200)
     })
   })
 })
