@@ -21,7 +21,6 @@ describe('Survey Routes', () => {
     surveyCollection = await MongoHelper.getCollection('surveys')
     accountCollection = await MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
-
     await surveyCollection.deleteMany({})
   })
 
@@ -80,6 +79,58 @@ describe('Survey Routes', () => {
       await request(app)
         .get('/api/surveys')
         .expect(403)
+    })
+
+    test('Shold return 204 on load surveys empty', async () => {
+      const password = await hash('1234', 12)
+      const res = await accountCollection.insertOne({
+        name: 'Matheus',
+        email: 'matheusteodoro01@hotmail.com',
+        password
+      })
+      const id = res.insertedId
+      const accessToken = sign({ id }, env.jtwSecret)
+      await accountCollection.updateOne({ _id: id }, {
+        $set: { accessToken }
+      })
+      await request(app)
+        .get('/api/surveys')
+        .set('x-access-token', accessToken)
+        .expect(204)
+    })
+
+    test('Shold return 200 on load surveys if valid access token is provided', async () => {
+      const password = await hash('1234', 12)
+      const res = await accountCollection.insertOne({
+        name: 'Matheus',
+        email: 'matheusteodoro01@hotmail.com',
+        password
+      })
+      const id = res.insertedId
+      const accessToken = sign({ id }, env.jtwSecret)
+      await accountCollection.updateOne({ _id: id }, {
+        $set: { accessToken }
+      })
+
+      await surveyCollection.insertOne(
+        {
+          question: 'any_question',
+          answers: [
+            {
+              answer: 'any_answer',
+              image: 'any_image'
+            },
+            {
+              answer: 'other_answer'
+            }
+          ],
+          date: new Date()
+        }
+      )
+      await request(app)
+        .get('/api/surveys')
+        .set('x-access-token', accessToken)
+        .expect(200)
     })
   })
 })
