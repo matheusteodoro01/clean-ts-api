@@ -2,7 +2,7 @@ import { AccountModel } from '@/domain/models/account'
 import { DbAuthetication } from './db-authentication'
 import { AuthenticationModel, LoadAccountByEmailRepository, HashComparer, Encrypter, UpdateAccessTokenRepository } from './db-authentication-protocols'
 
-interface SutTypes {
+type SutTypes = {
   sut: DbAuthetication
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
   hashComparerStub: HashComparer
