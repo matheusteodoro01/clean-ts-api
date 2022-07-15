@@ -1,7 +1,7 @@
 
-import { AddAccount, AddAccountModel, AccountModel, Hasher } from '../../../data/usecases/add-acount/db-add-account-protocols'
-import { AddAcountRepository } from '../../protocols/db/account/add-account-repository'
-import { LoadAccountByEmailRepository } from '../authentication/db-authentication-protocols'
+import { AddAccount, AddAccountModel, AccountModel, Hasher } from './db-add-account-protocols'
+import { AddAcountRepository } from '@/data/protocols/db/account/add-account-repository'
+import { LoadAccountByEmailRepository } from '@/data/protocols/db/account/load-account-by-email-repository'
 
 export class DbAddAccount implements AddAccount {
   constructor (

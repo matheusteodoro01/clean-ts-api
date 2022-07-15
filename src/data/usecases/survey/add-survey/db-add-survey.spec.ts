@@ -1,6 +1,6 @@
 
 import { AddSurveyRepository } from '@/data/protocols/db/survey/add-survey-repository'
-import { AddSurveyModel } from '@/domain/usecases/add-survey'
+import { AddSurveyModel } from '@/domain/usecases/survey/add-survey'
 import { DbAddSuvery } from './db-add-survey'
 import MockDate from 'mockdate'
 type SutTypes = {

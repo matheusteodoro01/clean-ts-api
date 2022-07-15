@@ -1,4 +1,4 @@
 export * from '../../../protocols'
-export * from '../../../../domain/usecases/add-survey'
-export * from '../../../../domain/usecases/authentication'
+export * from '../../../../domain/usecases/survey/add-survey'
+export * from '../../../../domain/usecases/account/authentication'
 export * from '../../../protocols/validation'
