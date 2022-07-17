@@ -11,7 +11,7 @@ type SutTypes = {
 
 }
 
-const makeFakeRequest = (): HttpRequest => ({ params: { surveyId: 'any_survey_id' } })
+const makeFakeRequest = (): HttpRequest => ({ params: { surveyId: 'any_survey_id' }, body: { answer: 'any_answer' } })
 
 const makeLoadSurveyById = (): LoadSurveyById => {
   class LoadSurveyByIdStub implements LoadSurveyById {
@@ -61,5 +61,12 @@ describe('SaveSurveyResultController', () => {
     jest.spyOn(loadSurveyByIdStub, 'loadById').mockReturnValue(Promise.reject(new Error()))
     const HttpResponse = await sut.handle(httpRequest)
     expect(HttpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should return 403 if an invalid anwser provided', async () => {
+    const { sut } = makeSut()
+    const httpRequest = { params: { surveyId: 'any_survey_id' }, body: { answer: 'wrong_answer' } }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(forbidden(new InvalidParamError('answer')))
   })
 })
