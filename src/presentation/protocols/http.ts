@@ -7,6 +7,7 @@ export type HttpResponse = {
 
 export type HttpRequest = {
   headers?: any
+  params?: any
   body?: any
 
 }
