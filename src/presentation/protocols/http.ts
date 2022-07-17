@@ -9,6 +9,6 @@ export type HttpRequest = {
   headers?: any
   params?: any
   body?: any
-  accountId: string
+  accountId?: string
 
 }
