@@ -100,6 +100,14 @@ describe('SaveSurveyResultController', () => {
     expect(HttpResponse).toEqual(serverError(new Error()))
   })
 
+  test('Should return 500 if SaveSurveyResult fails', async () => {
+    const { sut, dbSaveSurveyResultStub } = makeSut()
+    const httpRequest = makeFakeRequest()
+    jest.spyOn(dbSaveSurveyResultStub, 'save').mockReturnValue(Promise.reject(new Error()))
+    const HttpResponse = await sut.handle(httpRequest)
+    expect(HttpResponse).toEqual(serverError(new Error()))
+  })
+
   test('Should return 403 if an invalid anwser provided', async () => {
     const { sut } = makeSut()
     const httpRequest = { params: { surveyId: 'any_survey_id' }, body: { answer: 'wrong_answer' }, accountId: 'any_account_id' }
