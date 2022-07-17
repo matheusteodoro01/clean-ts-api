@@ -2,7 +2,7 @@ import { SurveyResultModel } from '@/domain/models/survey-result'
 import { SaveSurveyResult, SaveSurveyResultModel } from '@/domain/usecases/survey-result/save-survey-result'
 import { LoadSurveyById } from '@/domain/usecases/survey/load-survey-by-id'
 import { InvalidParamError } from '@/presentation/errors'
-import { forbidden, serverError } from '@/presentation/helpers/http/http-helper'
+import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 
 import { SaveSurveyResultController } from './save-survey-result-controller'
 import { HttpRequest, SurveyModel } from './save-survey-result-controller-protocols'
@@ -17,7 +17,7 @@ type SutTypes = {
 
 const makeFakeRequest = (): HttpRequest => ({ params: { surveyId: 'any_survey_id' }, body: { answer: 'any_answer' }, accountId: 'any_account_id' })
 
-const makeFakeSurveyResukt = (): SurveyResultModel => ({
+const makeFakeSurveyResult = (): SurveyResultModel => ({
   id: 'valid_id',
   surveyId: 'any_survey_id',
   accountId: 'any_id',
@@ -51,7 +51,7 @@ const makeLoadSurveyById = (): LoadSurveyById => {
 const makeDbSaveSurveyResult = (): SaveSurveyResult => {
   class DbSaveSurveyResultStub implements SaveSurveyResult {
     async save (data: SaveSurveyResultModel): Promise<SurveyResultModel> {
-      return await Promise.resolve(makeFakeSurveyResukt())
+      return await Promise.resolve(makeFakeSurveyResult())
     }
   }
   return new DbSaveSurveyResultStub()
@@ -106,6 +106,13 @@ describe('SaveSurveyResultController', () => {
     jest.spyOn(dbSaveSurveyResultStub, 'save').mockReturnValue(Promise.reject(new Error()))
     const HttpResponse = await sut.handle(httpRequest)
     expect(HttpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should return 200 on success', async () => {
+    const { sut } = makeSut()
+    const httpRequest = makeFakeRequest()
+    const HttpResponse = await sut.handle(httpRequest)
+    expect(HttpResponse).toEqual(ok(makeFakeSurveyResult()))
   })
 
   test('Should return 403 if an invalid anwser provided', async () => {
