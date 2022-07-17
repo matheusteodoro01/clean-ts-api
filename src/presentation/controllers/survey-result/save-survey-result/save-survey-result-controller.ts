@@ -1,6 +1,6 @@
 
 import { InvalidParamError } from '@/presentation/errors'
-import { Controller, forbidden, HttpRequest, HttpResponse, LoadSurveyById, SaveSurveyResult, serverError } from './save-survey-result-controller-protocols'
+import { Controller, forbidden, HttpRequest, HttpResponse, LoadSurveyById, ok, SaveSurveyResult, serverError } from './save-survey-result-controller-protocols'
 
 export class SaveSurveyResultController implements Controller {
   constructor (
@@ -17,7 +17,8 @@ export class SaveSurveyResultController implements Controller {
         const answers = survey.answers.map(answer => answer.answer)
         if (!answers.includes(answer)) return forbidden(new InvalidParamError('answer'))
       } else { return forbidden(new InvalidParamError('surveyId')) }
-      await this.saveSurveyResult.save({ accountId, surveyId, answer, date: new Date() })
+      const surveySResult = await this.saveSurveyResult.save({ accountId, surveyId, answer, date: new Date() })
+      return ok(surveySResult)
     } catch (error) {
       return serverError(new Error(error))
     }
