@@ -2,28 +2,17 @@
 import { LoadSurveysController } from './load-surveys-controller'
 import { LoadSurveys, noContent, ok, serverError, SurveyModel } from './load-surveys-protocols'
 import MockDate from 'mockdate'
+import { mockSurveyModel, throwError } from '@/tests'
 
 type SutTypes = {
   sut: LoadSurveysController
   loadSurveysUseCaseStub: LoadSurveys
 }
 
-const makeFakeSurveys = (): SurveyModel[] => (
-  [{
-    id: 'any_id',
-    question: 'any_version',
-    answers: [{
-      image: 'any_image',
-      answer: 'any_answer'
-    }],
-    date: new Date()
-  }]
-)
-
 const makeLoadSurveysStub = (): LoadSurveys => {
   class LoadSurveysUseCaseStub implements LoadSurveys {
     async load (): Promise<SurveyModel[]> {
-      return await Promise.resolve(makeFakeSurveys())
+      return await Promise.resolve([mockSurveyModel()])
     }
   }
   return new LoadSurveysUseCaseStub()
@@ -39,7 +28,6 @@ describe('LoadSurveys Controller', () => {
   beforeAll(() => {
     MockDate.set(new Date())
   })
-
   afterAll(() => {
     MockDate.reset()
   })
@@ -53,7 +41,7 @@ describe('LoadSurveys Controller', () => {
   test('Should 200 on success LoadSurveys', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle({})
-    expect(httpResponse).toEqual(ok(makeFakeSurveys()))
+    expect(httpResponse).toEqual(ok([mockSurveyModel()]))
   })
 
   test('Should 204 if LoadSurveys returns empty', async () => {
@@ -64,7 +52,7 @@ describe('LoadSurveys Controller', () => {
   })
   test('Should return 500 if LoadSurveys fails', async () => {
     const { sut, loadSurveysUseCaseStub } = makeSut()
-    jest.spyOn(loadSurveysUseCaseStub, 'load').mockReturnValue(Promise.reject(new Error()))
+    jest.spyOn(loadSurveysUseCaseStub, 'load').mockImplementation(throwError)
     const HttpResponse = await sut.handle({})
     expect(HttpResponse).toEqual(serverError(new Error()))
   })
