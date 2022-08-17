@@ -2,6 +2,7 @@ import { badRequest, noContent, serverError } from '../../../helpers/http/http-h
 import { AddSurveyController } from './add-survey-controller'
 import { AddSurvey, AddSurveyParams, HttpRequest, Validation } from './add-survey-protocols'
 import MockDate from 'mockdate'
+import { throwError } from '@/domain/test'
 interface sutTypes {
   sut: AddSurveyController
   validationStub: Validation
@@ -75,7 +76,7 @@ describe('AddSurveyController', () => {
   test('Should return 500 if AddSuveyUseCase fails', async () => {
     const { sut, addSurveyStub } = makeSut()
     const httpRequest = makeFakeRequest()
-    jest.spyOn(addSurveyStub, 'add').mockReturnValue(Promise.reject(new Error()))
+    jest.spyOn(addSurveyStub, 'add').mockImplementation(throwError)
     const HttpResponse = await sut.handle(httpRequest)
     expect(HttpResponse).toEqual(serverError(new Error()))
   })
