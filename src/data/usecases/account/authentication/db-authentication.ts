@@ -1,4 +1,4 @@
-import { Authentication, AuthenticationModel, LoadAccountByEmailRepository, HashComparer, Encrypter, UpdateAccessTokenRepository } from './db-authentication-protocols'
+import { Authentication, AuthenticationParams, LoadAccountByEmailRepository, HashComparer, Encrypter, UpdateAccessTokenRepository } from './db-authentication-protocols'
 
 export class DbAuthetication implements Authentication {
   constructor (
@@ -8,7 +8,7 @@ export class DbAuthetication implements Authentication {
     private readonly updateAccessTokenRepository: UpdateAccessTokenRepository
   ) {}
 
-  async auth (authentication: AuthenticationModel): Promise<string | null> {
+  async auth (authentication: AuthenticationParams): Promise<string | null> {
     const account = await this.loadAccountByEmailRepository.loadAccountByEmail(authentication.email)
     if (!account) { return await Promise.resolve(null) }
     const compare = await this.hashCompare.compare(authentication.password, account.password)

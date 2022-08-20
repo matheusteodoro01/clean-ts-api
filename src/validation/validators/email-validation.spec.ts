@@ -1,24 +1,15 @@
-import { EmailValidation } from './email-validation'
-import { EmailValidator } from '../../validation/protocols/email-validator'
-import { InvalidParamError } from '../../presentation/errors'
+import { EmailValidation } from '@/validation/validators'
+import { EmailValidator } from '@/validation/protocols/email-validator'
+import { InvalidParamError } from '@/presentation/errors'
+import { mockEmailValidator } from '@/validation/test'
 
 interface SutTypes{
   sut: EmailValidation
   emailValidatorStub: EmailValidator
 }
 
-const makeEmailValidator = (): EmailValidator => {
-  class EmailValidatorStub implements EmailValidator {
-    isValid (email: string): boolean {
-      return true
-    }
-  }
-  const emailValidatorStub = new EmailValidatorStub()
-  return emailValidatorStub
-}
-
 const makeSut = (): SutTypes => {
-  const emailValidatorStub = makeEmailValidator()
+  const emailValidatorStub = mockEmailValidator()
   const sut = new EmailValidation('email', emailValidatorStub)
   return { sut, emailValidatorStub }
 }

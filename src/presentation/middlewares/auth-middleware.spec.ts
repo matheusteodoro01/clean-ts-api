@@ -1,3 +1,4 @@
+import { mockAccountModel } from '@/domain/test'
 import { AccountModel } from '../controllers/login/signup/signup-controller-protocols'
 import { AuthMiddleware } from './auth-middleware'
 import {
@@ -10,9 +11,6 @@ import {
   ok
 } from './auth-middleware-protocols'
 
-const makeFakeAccount = (): AccountModel => ({
-  id: 'any_id', email: 'any-email', name: 'any-name', password: 'any-password'
-})
 const makeFakeRequest = (): HttpRequest => ({
   headers: { 'x-access-token': 'any-token' }
 })
@@ -24,7 +22,7 @@ type SutTypes = {
 const makeLoadAccountByTokenSub = (): LoadAccountByToken => {
   class LoadAccountByTokenStub implements LoadAccountByToken {
     async load (accessToken: string): Promise<AccountModel> {
-      return await Promise.resolve(makeFakeAccount())
+      return await Promise.resolve(mockAccountModel())
     }
   }
   return new LoadAccountByTokenStub()

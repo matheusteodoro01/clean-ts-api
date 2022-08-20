@@ -1,7 +1,10 @@
 import { badRequest, noContent, serverError } from '../../../helpers/http/http-helper'
 import { AddSurveyController } from './add-survey-controller'
-import { AddSurvey, AddSurveyModel, HttpRequest, Validation } from './add-survey-protocols'
+import { AddSurvey, HttpRequest, Validation } from './add-survey-protocols'
 import MockDate from 'mockdate'
+import { throwError } from '@/domain/test'
+import { mockValidation } from '@/validation/test'
+import { mockAddSuvey } from '@/presentation/test'
 interface sutTypes {
   sut: AddSurveyController
   validationStub: Validation
@@ -18,26 +21,9 @@ const makeFakeRequest = (): HttpRequest => ({
   }
 })
 
-const makeValidationStub = (): Validation => {
-  class ValidationStub implements Validation {
-    validate (input: any): Error | undefined {
-      return undefined
-    }
-  }
-  return new ValidationStub()
-}
-
-const makeAddSuveyStub = (): AddSurvey => {
-  class AddSurvey {
-    async add (data: AddSurveyModel): Promise<void> {
-      return await Promise.resolve(null)
-    }
-  }
-  return new AddSurvey()
-}
 const makeSut = (): sutTypes => {
-  const validationStub = makeValidationStub()
-  const addSurveyStub = makeAddSuveyStub()
+  const validationStub = mockValidation()
+  const addSurveyStub = mockAddSuvey()
   const sut = new AddSurveyController(validationStub, addSurveyStub)
   return { validationStub, addSurveyStub, sut }
 }
@@ -75,7 +61,7 @@ describe('AddSurveyController', () => {
   test('Should return 500 if AddSuveyUseCase fails', async () => {
     const { sut, addSurveyStub } = makeSut()
     const httpRequest = makeFakeRequest()
-    jest.spyOn(addSurveyStub, 'add').mockReturnValue(Promise.reject(new Error()))
+    jest.spyOn(addSurveyStub, 'add').mockImplementation(throwError)
     const HttpResponse = await sut.handle(httpRequest)
     expect(HttpResponse).toEqual(serverError(new Error()))
   })
