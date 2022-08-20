@@ -1,16 +1,9 @@
 import { MissingParamError } from '../../../errors'
 import { badRequest, ok, serverError, unthorized } from '../../../helpers/http/http-helper'
-import { HttpRequest, Authentication, Validation, AuthenticationParams } from './login-protocols'
+import { HttpRequest, Authentication, Validation } from './login-protocols'
 import { LoginController } from './login-controller'
-
-const makeAuthenticationStub = (): Authentication => {
-  class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationParams): Promise<string> {
-      return await Promise.resolve('valid_token')
-    }
-  }
-  return new AuthenticationStub()
-}
+import { mockValidation } from '@/validation/test'
+import { mockAuthentication } from '@/presentation/test'
 
 type SutTypes = {
   sut: LoginController
@@ -18,16 +11,9 @@ type SutTypes = {
   authenticationStub: Authentication
 
 }
-const makeValidation = (): Validation => {
-  class ValidationStub implements Validation {
-    validate (input: any): Error | undefined { return undefined }
-  }
-  return new ValidationStub()
-}
-
 const makeSut = (): SutTypes => {
-  const validationStub = makeValidation()
-  const authenticationStub = makeAuthenticationStub()
+  const validationStub = mockValidation()
+  const authenticationStub = mockAuthentication()
   const sut = new LoginController(validationStub, authenticationStub)
 
   return { sut, validationStub, authenticationStub }
