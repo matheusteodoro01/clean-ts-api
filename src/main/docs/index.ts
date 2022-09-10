@@ -1,6 +1,6 @@
-import { loginPath } from './paths/login-path'
-import { accountSchema } from './schemas/account-schema'
-import { loginParamsSchema } from './schemas/login-params-schema'
+import { loginPath } from './paths'
+import { badRequest, unauthorized, serverError, notFound } from './components'
+import { accountSchema, loginParamsSchema, errorSchema } from './schemas'
 
 export default {
   openapi: '3.0.0',
@@ -9,7 +9,15 @@ export default {
     description: 'API para realizar enquetes entre programadores',
     version: '1.0.0'
   },
-
+  license: {
+    name: 'ISC',
+    url: 'https://opensource.org/licenses/ISC'
+  },
+  contact: {
+    name: 'Matheus Teodoro',
+    email: 'matheus.apteodoro@gmail.com',
+    url: 'https://github.com/matheusteodoro01'
+  },
   servers: [{
     url: '/api'
   }],
@@ -21,6 +29,13 @@ export default {
   },
   schemas: {
     account: accountSchema,
-    loginParams: loginParamsSchema
+    loginParams: loginParamsSchema,
+    error: errorSchema
+  },
+  components: {
+    badRequest,
+    unauthorized,
+    notFound,
+    serverError
   }
 }
